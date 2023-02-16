@@ -6,8 +6,12 @@ def compare(regex, string):
     return compare(regex[1:], string[1:])
 
 
+def change_pos(regex, string):
+    return compare(regex, string) or bool(string) and change_pos(regex, string[1:])
+
+
 def main():
-    print(compare(*input().split('|')))
+    print(change_pos(*input().split('|')))
 
 
 if __name__ == '__main__':
