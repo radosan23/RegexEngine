@@ -1,11 +1,21 @@
 def compare(regex, string):
-    if not regex:
+    if not regex or regex == '$' and not string:
         return True
-    if regex == '$' and not string:
-        return True
-    if not string or regex[0] != string[0] and regex[0] != '.':
+    if len(regex) > 1 and regex[1] in ('?', '*', '+'):
+        return quantifiers(regex, string)
+    if not string or regex[0] not in (string[0], '.'):
         return False
     return compare(regex[1:], string[1:])
+
+
+def quantifiers(regex, string):
+    if regex[1] in ('*', '+') and len(string) > 1 and (string[0] == string[1] == regex[0] or regex[0] == '.'):
+        return (compare(regex[2:], string) if regex[1] != '+' else compare(regex[2:], string[1:])) \
+                                                                  or compare(regex, string[1:])
+    elif string and (regex[0] in (string[0], '.')):
+        return regex[1] != '+' and compare(regex[2:], string) or compare(regex[2:], string[1:])
+    else:
+        return False if regex[1] == '+' else compare(regex[2:], string)
 
 
 def change_pos(regex, string):
