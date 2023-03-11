@@ -50,6 +50,16 @@ class TestRegex(unittest.TestCase):
         self.assertFalse(regex.check_caret('^abc$', 'abca'))
         self.assertFalse(regex.check_caret('^...$', 'abcd'))
 
+    def test_quantifiers(self):
+        data = [('colou?r|color', True), ('colou?r|colour', True), ('colou?r|colouur', False),
+                ('colou*r|color', True), ('colou*r|colour', True), ('colou*r|colouur', True),
+                ('col.*r|color', True), ('col.*r|colour', True), ('col.*r|colr', True),
+                ('col.*r|collar', True), ('col.*r$|colors', False), ('aa?a|aaa', True),
+                ('aa?a|aa', True), ('aa*a|aaa', True), ('aa+a|aaa', True), ('aa+a|aa', False),
+                ('aa*aaa|aaaa', True), ('aa+aaa|aaaa', False), ('a.+aaa|abcdaaa', True)]
+        for item in data:
+            self.assertEqual(regex.check_caret(*item[0].split('|')), item[1], item)
+
 
 if __name__ == '__main__':
     unittest.main()
