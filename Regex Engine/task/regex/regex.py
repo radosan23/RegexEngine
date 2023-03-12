@@ -1,10 +1,15 @@
 def compare(regex, string):
     if not regex or regex == '$' and not string:
         return True
-    if len(regex) > 1 and regex[1] in ('?', '*', '+'):
+    if len(regex) > 1 and regex[1] in ('?', '*', '+') and regex[0] != '\\':
         return quantifiers(regex, string)
-    if not string or regex[0] not in (string[0], '.'):
-        return False
+    if regex[0] == '\\':
+        regex = regex[1:]
+        if not string or regex[0] != string[0]:
+            return False
+    else:
+        if not string or regex[0] not in (string[0], '.'):
+            return False
     return compare(regex[1:], string[1:])
 
 
