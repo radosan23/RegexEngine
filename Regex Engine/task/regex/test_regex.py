@@ -60,6 +60,12 @@ class TestRegex(unittest.TestCase):
         for item in data:
             self.assertEqual(regex.check_caret(*item[0].split('|')), item[1], item)
 
+    def test_escape(self):
+        data = [('\\.$|end.', True), ('3\\+3|3+3=6', True), ('\\?|Is this working?', True),
+                ('\\\\|\\', True), ('colou\\?r|color', False), ('colou\\?r|colour', False)]
+        for item in data:
+            self.assertEqual(regex.check_caret(*item[0].split('|')), item[1], item)
+
 
 if __name__ == '__main__':
     unittest.main()
